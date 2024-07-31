@@ -9,6 +9,7 @@
 4. Now, when you scan a QR code with the code `my-item`, it will play `my-item.mp3` audio ✨
 
 ### Features
+- No code to edit! 
 - Can scan classic (dark QR code on bright background) and inverted (bright QR code on dark background) QR codes (even both)
 - When you scan another QR code, previous audio automatically stops and new audio plays
 - If you scan non-related QR code, it ignores it
