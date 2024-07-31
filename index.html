@@ -11,58 +11,73 @@
   <link type="text/css" rel="stylesheet" href="core/main.css">
 </head>
 
-<body>
+<body data-has-audio="0" data-is-playing="0">
   <div id="video-container">
     <video id="qr-video"></video>
+
+    <div id="replay">
+      <div id="replay-button">
+        <svg width="44" height="44" fill="none" viewBox="0 0 44 44">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.75" d="M10.753 17.56a12.019 12.019 0 0 1 5.738-6.259 12.098 12.098 0 0 1 8.46-.923 12.05 12.05 0 0 1 6.962 4.872 11.96 11.96 0 0 1-1.975 15.734A12.08 12.08 0 0 1 21.985 34a12.081 12.081 0 0 1-7.971-2.968 12.007 12.007 0 0 1-2.72-3.425M10 10.06v7.5h7.532"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="play-pause">
+      <div id="play-button">
+        <svg width="44" height="44" fill="none" viewBox="0 0 44 44">
+          <path fill="currentColor" d="M11 7.333v29.334a1.833 1.833 0 0 0 2.794 1.562l23.833-14.667a1.833 1.833 0 0 0 0-3.124L13.794 5.771A1.833 1.833 0 0 0 11 7.333Z" fill-rule="evenodd" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div id="pause-button">
+        <svg width="44" height="44" fill="none" viewBox="0 0 44 44">
+          <path fill="currentColor" fill-rule="evenodd" d="M12.833 7.333H16.5A3.667 3.667 0 0 1 20.167 11v22a3.667 3.667 0 0 1-3.667 3.667h-3.667A3.667 3.667 0 0 1 9.167 33V11a3.667 3.667 0 0 1 3.666-3.667Zm14.667 0h3.667A3.667 3.667 0 0 1 34.833 11v22a3.667 3.667 0 0 1-3.666 3.667H27.5A3.667 3.667 0 0 1 23.833 33V11A3.667 3.667 0 0 1 27.5 7.333Z" clip-rule="evenodd" />
+        </svg>
+      </div>
+    </div>
+
+    <div id="close">
+      <div id="close-button">
+        <svg width="44" height="44" fill="none" viewBox="0 0 44 44">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.75" d="M33 11 11 33m0-22 22 22" />
+        </svg>
+      </div>
+    </div>
   </div>
 
-  <!-- <b>Detected QR code: </b>
-  <span id="cam-qr-result">None</span>
-  <br>
-  <b>Last detected at: </b>
-  <span id="cam-qr-result-timestamp"></span> -->
-
-  <!-- <button id="start-button">Start</button>
-  <button id="stop-button">Stop</button> -->
 
   <script src="config.js"></script>
-
   <script type="module">
     import QrScanner from "./core/qr-scanner.min.js";
 
+    const body = document.body;
+
     const video = document.getElementById('qr-video');
     const videoContainer = document.getElementById('video-container');
-    // const camQrResult = document.getElementById('cam-qr-result');
-    // const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
 
-    // let previousAudio = null;
+    const playPauseContainer = document.getElementById('play-pause');
+    const playButton = document.getElementById('play-button');
+    const pauseButton = document.getElementById('pause-button');
+
+    const replayContainer = document.getElementById('replay');
+    const replayButton = document.getElementById('replay-button');
+
+    const closeContainer = document.getElementById('close');
+    const closeButton = document.getElementById('close-button');
+
     let audio = null;
     let previousCode = null;
 
-    function onResult(result) {
-      const code = result.data;
-      // console.log(code);
+    if (config.enablePlayPause && config.enablePlayPause == true) {
+      playPauseContainer.classList.add('enabled');
+    }
 
-      let newAudio = new Audio('sounds/' + code + '.mp3');
-      newAudio.onloadeddata = function () {
+    if (config.enableReplay && config.enableReplay == true) {
+      replayContainer.classList.add('enabled');
+    }
 
-        // if new audio is different from previous audio
-        if (previousCode != code) {
-
-          if (audio) {
-            audio.pause();
-          }
-
-          audio = newAudio;
-          audio.play();
-          previousCode = code;
-        }
-      }
-
-
-      // Result
-      // camQrResult.textContent = result.data;
-      // camQrResultTimestamp.textContent = new Date().toString();
+    if (config.enableClose && config.enableClose == true) {
+      closeContainer.classList.add('enabled');
     }
 
     // ####### Web Cam Scanning #######
@@ -94,13 +109,82 @@
       scanner.setInversionMode(detections[config.theme]);
     }
 
-    // document.getElementById('start-button').addEventListener('click', () => {
-    //   scanner.start();
-    // });
+    function onResult(result) {
+      const code = result.data;
 
-    // document.getElementById('stop-button').addEventListener('click', () => {
-    //   scanner.stop();
-    // });
+      let newAudio = new Audio('sounds/' + code + '.mp3');
+      newAudio.onloadeddata = function () {
+
+        // if new audio is different from previous audio
+        if (previousCode != code) {
+
+          if (audio !== null) {
+            pauseAudio();
+          }
+
+          audio = newAudio;
+          previousCode = code;
+
+          playAudio();
+
+        }
+      }
+    }
+
+    document.getElementById('play-button').addEventListener('click', () => {
+      if (audio !== null) {
+        playAudio()
+      }
+    });
+
+    document.getElementById('pause-button').addEventListener('click', () => {
+      if (audio !== null) {
+        pauseAudio();
+      }
+    });
+
+    document.getElementById('replay-button').addEventListener('click', () => {
+      if (audio !== null) {
+        replayAudio();
+      }
+    });
+
+    document.getElementById('close-button').addEventListener('click', () => {
+      if (audio !== null) {
+        closeAudio();
+      }
+    });
+
+    function playAudio() {
+      audio.play();
+
+      body.setAttribute('data-has-audio', 1);
+      body.setAttribute('data-is-playing', 1);
+    }
+
+    function pauseAudio() {
+      audio.pause();
+
+      body.setAttribute('data-has-audio', 1);
+      body.setAttribute('data-is-playing', 0);
+    }
+
+    function replayAudio() {
+      audio.currentTime = 0.00001;
+      audio.play();
+
+      body.setAttribute('data-has-audio', 1);
+      body.setAttribute('data-is-playing', 1);
+    }
+
+    function closeAudio() {
+      audio.pause();
+      audio = null;
+      previousCode = null; // allow scanning the same code again
+
+      body.setAttribute('data-has-audio', 0);
+      body.setAttribute('data-is-playing', 0);
+    }
   </script>
 </body>
 

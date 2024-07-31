@@ -10,6 +10,10 @@ const config = {
   // - user: front camera
   camera: 'environment',
 
+  enablePlayPause: true,
+  enableReplay: true,
+  enableClose: true,
+
   // Highlight scan region on video
   // highlightScanRegion: false,
 
