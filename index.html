@@ -28,12 +28,12 @@
   <script src="config.js"></script>
 
   <script type="module">
-    import QrScanner from "../core/qr-scanner.min.js";
+    import QrScanner from "./core/qr-scanner.min.js";
 
     const video = document.getElementById('qr-video');
     const videoContainer = document.getElementById('video-container');
-    const camQrResult = document.getElementById('cam-qr-result');
-    const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
+    // const camQrResult = document.getElementById('cam-qr-result');
+    // const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
 
     // let previousAudio = null;
     let audio = null;
@@ -69,8 +69,8 @@
 
     const scanner = new QrScanner(video, result => onResult(result), {
       onDecodeError: error => {
-        camQrResult.textContent = error;
-        camQrResult.style.color = 'inherit';
+        // console.log(error);
+        // camQrResult.textContent = error;
       },
       preferredCamera: config.camera.camera,
       highlightScanRegion: config.camera.highlightScanRegion ?? false,
