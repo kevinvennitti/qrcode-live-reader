@@ -15,10 +15,12 @@
   <div id="video-container">
     <video id="qr-video"></video>
 
+    <div id="pulse"></div>
+
     <div id="replay">
       <div id="replay-button">
         <svg width="44" height="44" fill="none" viewBox="0 0 44 44">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.75" d="M10.753 17.56a12.019 12.019 0 0 1 5.738-6.259 12.098 12.098 0 0 1 8.46-.923 12.05 12.05 0 0 1 6.962 4.872 11.96 11.96 0 0 1-1.975 15.734A12.08 12.08 0 0 1 21.985 34a12.081 12.081 0 0 1-7.971-2.968 12.007 12.007 0 0 1-2.72-3.425M10 10.06v7.5h7.532"/>
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.75" d="M10.753 17.56a12.019 12.019 0 0 1 5.738-6.259 12.098 12.098 0 0 1 8.46-.923 12.05 12.05 0 0 1 6.962 4.872 11.96 11.96 0 0 1-1.975 15.734A12.08 12.08 0 0 1 21.985 34a12.081 12.081 0 0 1-7.971-2.968 12.007 12.007 0 0 1-2.72-3.425M10 10.06v7.5h7.532" />
         </svg>
       </div>
     </div>
@@ -64,6 +66,10 @@
 
     const closeContainer = document.getElementById('close');
     const closeButton = document.getElementById('close-button');
+
+    const pulse = document.getElementById('pulse');
+
+    let timeoutPulse = null;
 
     let audio = null;
     let previousCode = null;
@@ -115,8 +121,18 @@
       let newAudio = new Audio('sounds/' + code + '.mp3');
       newAudio.onloadeddata = function () {
 
+        newAudio.onended = function () {
+          closeAudio();
+        };
+
         // if new audio is different from previous audio
         if (previousCode != code) {
+          pulse.classList.add('animate');
+          clearTimeout(timeoutPulse);
+          
+          timeoutPulse = setTimeout(() => {
+            pulse.classList.remove('animate');
+          }, 1200);
 
           if (audio !== null) {
             pauseAudio();

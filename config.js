@@ -13,6 +13,8 @@ const config = {
   enablePlayPause: true,
   enableReplay: true,
   enableClose: true,
+  
+  enablePulseOnScan: true,
 
   // Highlight scan region on video
   // highlightScanRegion: false,
