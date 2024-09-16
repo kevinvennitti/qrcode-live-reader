@@ -472,3 +472,46 @@ body[data-has-audio="1"][data-is-playing="0"] #pause-button {
   stroke-linejoin: round !important;
   border-radius:100px;
 } */
+
+#start {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.8);
+  z-index:100;
+  transition: all 1000ms cubic-bezier(.32, .3, .12, .99);
+  color:white;
+  font-size:50px;
+
+}
+
+#start svg {
+  transform: translate(-50%, -50%);
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  width: 96px;
+  height: 96px;
+  padding:24px;
+  border: solid 2px rgba(255, 255, 255, 0.3);
+  border-radius: 100%;
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 1000ms cubic-bezier(.32, .3, .12, .99);
+}
+
+body.can-scan #start {
+  opacity:0;
+  pointer-events: none;
+}
+
+body.can-scan #start svg {
+  transform: translate(-50%, -50%) scale(1.2);
+  opacity:0;
+}

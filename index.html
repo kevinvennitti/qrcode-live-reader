@@ -13,6 +13,13 @@
 
 <body data-has-audio="0" data-is-playing="0">
   <div id="video-container">
+
+    <div id="start">
+      <svg width="44" height="44" fill="none" viewBox="0 0 44 44">
+        <path fill="currentColor" d="M34.209 20.294c1.275.78 1.275 2.633 0 3.412L14.543 35.728c-1.332.815-3.043-.144-3.043-1.706V9.978c0-1.562 1.71-2.52 3.043-1.706L34.21 20.294Z" />
+      </svg>
+    </div>
+
     <video id="qr-video"></video>
 
     <div id="pulse"></div>
@@ -52,6 +59,8 @@
   <script type="module">
     import QrScanner from "./core/qr-scanner.min.js";
 
+    let CAN_SCAN = false;
+
     const body = document.body;
 
     const video = document.getElementById('qr-video');
@@ -88,34 +97,46 @@
 
     // ####### Web Cam Scanning #######
 
-    const scanner = new QrScanner(video, result => onResult(result), {
-      onDecodeError: error => {
-        // console.log(error);
-        // camQrResult.textContent = error;
-      },
-      preferredCamera: config.camera,
-      highlightScanRegion: config.highlightScanRegion || false,
-      highlightCodeOutline: config.highlightQRCodeOutline || false,
-    });
+    function init() {
 
-    scanner.start().then(() => {
-      scanner._updateOverlay();
-    });
+      const scanner = new QrScanner(video, result => onResult(result), {
+        onDecodeError: error => {
+          // console.log(error);
+          // camQrResult.textContent = error;
+        },
+        preferredCamera: config.camera,
+        highlightScanRegion: config.highlightScanRegion || false,
+        highlightCodeOutline: config.highlightQRCodeOutline || false,
+      });
 
-    // for debugging
-    window.scanner = scanner;
+      scanner.start().then(() => {
+        scanner._updateOverlay();
+      });
 
-    if (config.theme) {
-      const detections = {
-        'black-on-white': 'original',
-        'white-on-black': 'invert',
-        'both': 'both',
-      };
+      // for debugging
+      window.scanner = scanner;
 
-      scanner.setInversionMode(detections[config.theme]);
+      if (config.theme) {
+        const detections = {
+          'black-on-white': 'original',
+          'white-on-black': 'invert',
+          'both': 'both',
+        };
+
+        scanner.setInversionMode(detections[config.theme]);
+      }
+    }
+
+    init();
+
+    function enableScan() {
+      CAN_SCAN = true;
+      body.classList.add('can-scan');
     }
 
     function onResult(result) {
+      if (!CAN_SCAN) return;
+      
       const code = result.data;
 
       let newAudio = new Audio('sounds/' + code + '.mp3');
@@ -149,6 +170,10 @@
         }
       }
     }
+
+    document.getElementById('start').addEventListener('click', () => {
+      enableScan();
+    });
 
     document.getElementById('play-button').addEventListener('click', () => {
       if (audio !== null) {
