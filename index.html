@@ -149,6 +149,7 @@
       const code = result.data;
 
       let newAudio = new Audio('sounds/' + code + '.mp3');
+      newAudio.autoplay = true;
 
 
       console.log('audio:');
@@ -186,8 +187,8 @@
 
           console.log('audio ready to play');
 
-          //playAudio();
-            pauseAudio();
+          playAudio();
+            // pauseAudio();
 
         }
       }
