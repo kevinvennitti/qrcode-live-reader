@@ -98,6 +98,7 @@
     // ####### Web Cam Scanning #######
 
     function init() {
+      console.log('init');
 
       const scanner = new QrScanner(video, result => onResult(result), {
         onDecodeError: error => {
@@ -110,6 +111,8 @@
       });
 
       scanner.start().then(() => {
+
+      console.log('dcanner has started');
         scanner._updateOverlay();
       });
 
@@ -132,10 +135,16 @@
     function enableScan() {
       CAN_SCAN = true;
       body.classList.add('can-scan');
+      console.log('enable scan');
     }
 
     function onResult(result) {
+      console.log('onResult');
+
       if (!CAN_SCAN) return;
+
+
+      console.log('onResult (can scan = true)');
       
       const code = result.data;
 
