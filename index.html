@@ -149,14 +149,23 @@
       const code = result.data;
 
       let newAudio = new Audio('sounds/' + code + '.mp3');
+
+
+      console.log('audio:');
+      console.log(newAudio);
+
       newAudio.onloadeddata = function () {
 
+        console.log('onloadeddata');
+
         newAudio.onended = function () {
+          console.log('audio ended');
           closeAudio();
         };
 
         // if new audio is different from previous audio
         if (previousCode != code) {
+          console.log('audio different');
           clearTimeout(timeoutPulse);
           pulse.classList.remove('animate');
           setTimeout(function () {
@@ -173,6 +182,9 @@
 
           audio = newAudio;
           previousCode = code;
+
+
+          console.log('audio ready to play');
 
           //playAudio();
             pauseAudio();
