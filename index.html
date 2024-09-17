@@ -155,9 +155,9 @@
       console.log('audio:');
       console.log(newAudio);
 
-      newAudio.onloadeddata = function () {
+      newAudio.onloadedmetadata = function () {
 
-        console.log('onloadeddata');
+        console.log('onloadedmetadata');
 
         newAudio.onended = function () {
           console.log('audio ended');
