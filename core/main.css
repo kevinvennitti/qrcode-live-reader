@@ -320,11 +320,17 @@ html {
 
 #play-pause {
   position: absolute;
-  bottom: 27px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 66px;
-  height: 66px;
+  transform: translate(-50%, -50%);
+  width: 166px;
+  height: 166px;
+  pointer-events: none;
+}
+
+body.can-play #play-pause {
+  display:block;
+  pointer-events: all;
 }
 
 #play-button,
@@ -332,13 +338,21 @@ html {
   position: absolute !important;
   top: 0;
   left: 0;
-  width: 66px;
-  height: 66px;
+  width: 166px;
+  height: 166px;
   border: solid 2px rgba(255, 255, 255, 0.3);
+  background: white;
   border-radius: 100%;
   display:flex;
   align-items: center;
   justify-content: center;
+}
+
+#play-button svg,
+#pause-button svg {
+  width:96px;
+  height:96px;
+  mix-blend-mode: difference;
 }
 
 #replay {
@@ -409,9 +423,9 @@ body[data-has-audio="1"][data-is-playing="0"] #pause-button {
   pointer-events: none;
 }
 
-#play-pause.enabled,
-#replay.enabled,
-#close.enabled {
+body.can-scan #play-pause.enabled,
+body.can-scan #replay.enabled,
+body.can-scan #close.enabled {
   display: block;
   pointer-events: all;
   mix-blend-mode: difference;
